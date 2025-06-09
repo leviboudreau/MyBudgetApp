@@ -10,7 +10,7 @@ import Charts
 
 struct IncomeDashboardView: View {
     @ObservedObject var monthModel: MonthSelectionViewModel
-    @StateObject private var viewModel = IncomeViewModel()
+    @ObservedObject var viewModel: IncomeViewModel
     @State private var showingAddSheet = false
     @State private var entryToEdit: IncomeEntry?
     @State private var entryToDelete: IncomeEntry?
@@ -53,7 +53,7 @@ struct IncomeDashboardView: View {
                 Text("Selected Month:")
 
                 Picker("Month", selection: $monthModel.selectedMonthValue) {
-                    ForEach(1...12, id: \.self) { month in
+                    ForEach(1...12, id: \Int.self) { month in
                         Text(Calendar.current.monthSymbols[month - 1]).tag(month)
                     }
                 }
@@ -61,7 +61,7 @@ struct IncomeDashboardView: View {
                 .frame(width: 120)
 
                 Picker("Year", selection: $monthModel.selectedYearValue) {
-                    ForEach(2020...Calendar.current.component(.year, from: Date()) + 5, id: \.self) { year in
+                    ForEach(2020...Calendar.current.component(.year, from: Date()) + 5, id: \Int.self) { year in
                         Text(String(year)).tag(year)
                     }
                 }

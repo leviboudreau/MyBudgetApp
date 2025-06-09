@@ -37,6 +37,7 @@ class IncomeViewModel: ObservableObject {
 
     // MARK: - Income Calculations
 
+    
     func monthlyIncome(for month: Date = Date()) -> Double {
         let daysInMonth = Calendar.current.range(of: .day, in: .month, for: month)?.count ?? 30
         return entries.reduce(0) { total, entry in
@@ -49,7 +50,11 @@ class IncomeViewModel: ObservableObject {
         return estimatedMonthly(from: entry, daysInMonth: daysInMonth, for: month)
     }
 
-    private func estimatedMonthly(from entry: IncomeEntry, daysInMonth: Int, for month: Date) -> Double {
+    func estimatedMonthly(for month: Date) -> Double {
+        monthlyIncome(for: month)
+    }
+    
+    func estimatedMonthly(from entry: IncomeEntry, daysInMonth: Int, for month: Date) -> Double {
         let calendar = Calendar.current
         guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: month)),
               let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth) else {
@@ -110,4 +115,5 @@ class IncomeViewModel: ObservableObject {
             entries = decoded
         }
     }
+    
 }

@@ -53,5 +53,31 @@ class BudgetViewModel: ObservableObject {
         save()
     }
 
+    func totalSpent() -> Double {
+        categories.reduce(0) { $0 + $1.spent }
+    }
+
+    func autoBudgetedBills(from bills: [Bill]) -> [BudgetCategory] {
+        bills
+            .filter { $0.category == .subscription || $0.category == .utilities }
+            .map {
+                BudgetCategory(name: $0.payee, amount: $0.amount, spent: 0)
+            }
+    }
+    
+    func integrateBillsAsBudgetedItems(from bills: [Bill]) {
+        let filtered = bills.filter { $0.category == .subscription || $0.category == .utilities }
+
+        for bill in filtered {
+            // Avoid duplicates by payee name
+            if !categories.contains(where: { $0.name == bill.payee }) {
+                let category = BudgetCategory(name: bill.payee, amount: bill.amount, spent: 0)
+                categories.append(category)
+            }
+        }
+
+        save() // optional: persist updates
+    }
+
 }
 
